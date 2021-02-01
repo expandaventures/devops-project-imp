@@ -1,0 +1,20 @@
+image: docker:latest
+
+stages:
+  - build
+
+build-master:
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "useribmtest" -p "898aeec6-549c-41b3-84aa-e76a37854b3c" $CI_REGISTRY
+  script:
+    - ps -ef 
+    - dockerd --iptables=false &
+    - sleep 30
+    - docker info | grep 'Storage Driver:'
+    - docker build -t test/exam:latest .
+    - docker images
+  only:
+    - master
